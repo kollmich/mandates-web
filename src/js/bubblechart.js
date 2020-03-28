@@ -52,7 +52,7 @@ function getScaleColour(data) {
   return d3
     .scaleSequential()
     .domain([d3.min(data, d => d.difference),d3.max(data, d => d.difference)])
-    .interpolator(d3.interpolate("#CC2A36", "#00b068"));
+    .interpolator(d3.interpolate("#CC2A36", "#5175ed"));
 }
 
 function getScaleY(data) {
@@ -171,7 +171,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .attr("x2",width)
     .attr("y1",scaleY(0))
     .attr("y2",scaleY(0))
-    .style("stroke-width","1px")
+    .style("stroke-width","2.5px")
     .style("stroke","grey");
 
   const $politician = $gVis
@@ -190,9 +190,10 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .selectAll('.approval_rect')
     .attr('class',function(d) { return d.politician })
     .attr("y", function(d) { return scaleY(Math.max(0, d.difference)); })//scaleY(Math.min(0, d.difference));}) //scaleX(0.6);})
-    .attr("x", function(d) { return scaleBand(d.politician); })
+    .attr("x", function(d) { return scaleBand(d.politician)-2; })
     .attr("height", function(d) { return Math.abs(scaleY(d.difference) - scaleY(0));})
-    .attr("width", "3.5px")//scaleBand.bandwidth())
+    .attr("width", "5px")//scaleBand.bandwidth())
+    .style("stroke-width","5.5px")
     .attr("fill", function(d) { return scaleColour(d.difference);})
     .attr("opacity", 1.0);
 
@@ -236,13 +237,13 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .attr("x", function(d) { return scaleBand(d.politician)-img_size/2; })
     .attr("width", img_size)
     .attr("height", img_size)
-    .attr("opacity", .4)
+    .attr("opacity", .5)
     .on('mouseover',function(d) {
 
       d3.select(this)
       .transition()
       .duration($transTime)
-      .attr("opacity", .9);
+      .attr("opacity", 1);
 
       $tooltip.style("visibility", "visible")
 
@@ -265,7 +266,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
 
       $tooltip.append('p')
         .attr('class','bio')
-        .text(`${d.bio}`);
+        .text(`${d.bio_en}`);
 
     })
     .on('mouseout',function() {
@@ -280,7 +281,12 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
       return $tooltip.style("visibility", "hidden");
     })
     .on('mousemove', function() {
-      return $tooltip.style("top", (event.pageY-50)+"px").style("left",(event.pageX+25)+"px");
+      // $tooltip.style("top", (event.pageY-d3.mouse(this)[0])+"px").style("left",(event.pageX-d3.mouse(this)[1]/2)+"px");
+      if (d3.mouse(this)[0] < width/2) {
+        return $tooltip.style("top", (event.pageY-150)+"px").style("left",(event.pageX+25)+"px");
+      } else {
+        return $tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-350)+"px");
+      }
   });
 
   $politicianEnter.append("text")
@@ -311,7 +317,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
       "visibility": "hidden",
       "padding": "5px",
       "background-color": "white",
-      "opacity": "1",
+      "opacity": "0.95",
       "border": "1px solid #ddd",
       "border-radius": "5%",
       "max-width": "300px"
@@ -348,8 +354,6 @@ function resize() {
 function init() {
   loadData('data_politicians.csv').then(result => {
     politiciansData = cleanData.cleanPoliticians(result).sort((a, b) => d3.descending(a.difference, b.difference)).slice(0,10);
-    //politiciansData = dirty//.sort((a, b) => d3.descending(a.difference, b.difference));
-    // console.log(politiciansData);
     resize();
     bubbleChart();
   }).catch(console.error);
