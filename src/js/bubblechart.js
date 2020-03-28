@@ -283,9 +283,9 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .on('mousemove', function() {
       // $tooltip.style("top", (event.pageY-d3.mouse(this)[0])+"px").style("left",(event.pageX-d3.mouse(this)[1]/2)+"px");
       if (d3.mouse(this)[0] < width/2) {
-        return $tooltip.style("top", (event.pageY-150)+"px").style("left",(event.pageX+25)+"px");
+        return $tooltip.style("top", (event.pageY-150)+"px").style("left",(event.pageX+75)+"px");
       } else {
-        return $tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-350)+"px");
+        return $tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-375)+"px");
       }
   });
 

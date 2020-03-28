@@ -425,6 +425,7 @@ function drawLineChart(data, scaleX, scaleY, scaleColour) {
 
 
       $legend.on("mouseover", function(d) {
+
         $gVis.selectAll('.highlightCircle').attr('opacity',0);
         $gVis.selectAll('.party').attr('opacity',0.1);
         $gVis.selectAll('.circle').attr('opacity',0.1);
@@ -434,6 +435,10 @@ function drawLineChart(data, scaleX, scaleY, scaleColour) {
           .attr('opacity',1)
           .attr('stroke-width',STROKE_W)
           .attr('r', $chart.node().offsetWidth/250);
+        d3.select(this)
+          .style('background-color','#eee')
+          .style('border-radius','5px')
+          .style('border','0px solid #ddd');
       });
 
       $legend.on("mouseout", function() {
@@ -442,6 +447,9 @@ function drawLineChart(data, scaleX, scaleY, scaleColour) {
           .attr('opacity',1)
           .attr('stroke-width',STROKE_W/2)
           .attr('r', $chart.node().offsetWidth/400);
+        d3.select(this)
+          .style('background-color',"white")
+          .style('border','none');
       });
 
       $legend.exit().remove();
