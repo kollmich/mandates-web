@@ -1,9 +1,9 @@
 /* global d3 */
 import debounce from 'lodash.debounce';
 import isMobile from './utils/is-mobile';
-import graphic from './graphic';
-import footer from './footer';
-import cleanData from './clean-data';
+// import footer from './footer';
+import lineChart from './linechart';
+import bubbleChart from './bubblechart';
 
 const $body = d3.select('body');
 let previousWidth = 0;
@@ -14,7 +14,8 @@ function resize() {
   const width = $body.node().offsetWidth;
   if (previousWidth !== width) {
     previousWidth = width;
-    graphic.resize();
+    lineChart.resize();
+    bubbleChart.resize();
   }
 }
 
@@ -36,24 +37,11 @@ function init() {
   $body.classed('is-mobile', isMobile.any());
   // setup resize event
   window.addEventListener('resize', debounce(resize, 150));
-  // setup sticky header menu
-  setupStickyHeader();
   // kick off graphic code
-  //graphic.init();
+  lineChart.init();
+  bubbleChart.init();
   // load footer stories
-  //footer.init();
+  // footer.init();
 }
-
-  // kick off graphic code
-  d3.loadData('assets/data/emissions_data.csv', (err, response) => {
-    const emissionsData = cleanData.cleanData(response[0]);
-    graphic.init(emissionsData);
-		// graphicChange.init(peopleData);
-		// graphicCare.init(peopleData);
-		// graphicImpact.init(peopleData);
-		// filter({ name: 'Industry', data: peopleData });
-		// filter({ name: 'Cause', data: peopleData });
-		// preloadImages(peopleData);
-  });
 
 init();

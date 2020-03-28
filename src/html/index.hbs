@@ -19,9 +19,30 @@
 		<section id='main'>
 			{{> story/main}}
 		</section>
-		<section id='epilogue'>	
-			{{> story/epilogue}}
+		<section id='bubblechart'>
+			{{> story/bubblechart}}
 		</section>
+		<!-- Share buttons code -->
+        <div id="social__buttons">
+            <a class="twitter-share-button"
+                data-size="small"
+                data-url='{{meta.site}}'
+                data-hashtags="dataviz"
+                >Tweet
+            </a>
+            <div class="fb-share-button" 
+                data-href='{{meta.site}}'
+                data-layout="button" 
+                data-size="small">
+                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.trendspotting.site%2F2020%2FMarch%2Femissions-mini%2Findex.html&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a>
+            </div>
+        </div>
+		</br>
+		</br>
+		{{!-- <section id='epilogue'>	
+			{{> story/epilogue}}
+		</section> --}}
+
 	</main>
 	{{!-- {{> base/signature }} --}}
 	{{!-- {{> base/footer }} --}}

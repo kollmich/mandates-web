@@ -1,18 +1,19 @@
-#main
+
+#bubblechart
     margin 0 auto
-    margin-top 1.5rem
+    margin-top .5rem
     margin-bottom 1rem
     width $column-width
     +mq('bp-4')
-        margin-top 3rem
+        margin-top 1rem
         width $column-width-wide
         max-width $column-width-max
+
 
     h3
         font-family $sans
         font-size 16px
         text-decoration underline
-        margin-bottom 4px
 
     .heading
         font-family $akkurat
@@ -45,53 +46,63 @@
         font-weight 400
         fill $gray
 
-    .axis path
-        stroke $gray-light
-        opacity 0.7
 
-    .axis line
-        stroke $gray-light
-        opacity 0.7
+    .axis
+        shape-rendering: crispEdges;
+        // opacity 0.5
 
-    .axis text
-        font-family $akkurat
-        font-size 10.5px
-        fill $gray-dark
-        +mq('bp-4')
-            font-size 11.5px
+        path
+            stroke none
+            opacity 0.7
 
+        line
+            stroke $gray-light
+            opacity 0.7
 
+        text
+            font-family $akkurat
+            font-size 10.5px
+            fill $gray-dark
+            +mq('bp-4')
+                font-size 11.5px
 
-    .graphic__parties
-        //width 50%
-        // height 100px
-        display flex
-        flex-flow row wrap
-        // border-top 1px solid $gray
-        // border-bottom 1px solid $gray
-        justify-content flex-start
-        align-content flex-end
-        // margin 0 5px
-        // padding 5px 0
+        .tick
+            line
+                fill $gray-light
+                opacity 0.25
+    
+        .axis--x
+            line
+                stroke white
+                stroke-width 0px
 
-        .party
-            // border-top 1px solid $gray
-            // border-bottom 1px solid $gray
-            padding 5px 10px
-            text-align: center
-            flex-grow 0
+    .approval_text
+        text-transform uppercase
+        font-weight 400
+        font-size 9px
+        font-family $sans-fb
+        color white
 
-            p
-                font-size 12px
-                margin 0 auto
-                font-weight 600
-                font-family $sans-fb
+.profiles__chart
+    margin-top 30px
+    display inline-block
+    // width 34%
+    vertical-align top
+    position relative
+    // width 250px
+    // height 200px
+    // background-color $gray
 
-    .datetime
-        font-size 14px
+    img 
+        position absolute 
+        right 0
+        top 0
+
+    h3
         font-family $sans-fb
 
-
+    .birthplace
+        font-family $sans-fb    
 
 .prose__hed
     width $column-width
