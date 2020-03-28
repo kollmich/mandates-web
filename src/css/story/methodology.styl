@@ -1,0 +1,34 @@
+#methodology
+    margin 0 auto
+    margin-top 1.5rem
+    margin-bottom 2rem
+    +mq('bp-4')
+        margin-top 3rem
+        margin-bottom 4rem
+
+    #articles, #citations
+            width $column-width
+            margin 0 auto
+            -webkit-font-smoothing antialiased
+            -moz-osx-font-smoothing grayscale       
+            text-align justify         
+            +mq('bp-4')
+                width $column-width-wide
+                max-width $column-width-max * 0.7
+
+            .hed
+                margin-top 2.5rem
+                font-family $akkurat
+                opacity 1
+                color $gray-dark
+                font-size 14px
+                font-weight 800
+                +mq('bp-4')
+                    font-size 18px
+
+            p
+                margin 0
+                font-family $akkurat
+                font-size 11.5px
+                font-weight 400
+                color $gray-dark
