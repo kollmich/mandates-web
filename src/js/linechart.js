@@ -41,7 +41,7 @@ function getScaleX(data) {
 function getScaleY(data) {
   return d3
     .scaleLinear()
-    .domain([0, d3.max(data, d => d.result)*1])
+    .domain([0, d3.max(data, d => d.result)*1.05])
     .range([height, 0])
     .nice();
 }

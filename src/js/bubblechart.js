@@ -145,7 +145,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .remove();
 
   $svg.append('text')
-    .text(`data: Focus, AKO`)
+    .text(`data: Focus`)
     .at({
       'class': 'source',
       'transform': `translate(${0},${height+MARGIN.top+MARGIN.bottom - 5})`,
@@ -237,18 +237,51 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .attr("width", img_size)
     .attr("height", img_size)
     .attr("opacity", .4)
-    .on('mouseover',function() {
+    .on('mouseover',function(d) {
+
       d3.select(this)
       .transition()
       .duration($transTime)
       .attr("opacity", .9);
+
+      $tooltip.style("visibility", "visible")
+
+      $tooltip.append('h3')
+        .text(d.politician)
+        
+      $tooltip.append('p')
+        .attr('class','bio_popularity')
+        .text(`approval: ${Math.round(d.approval*100)}%`)
+        .style('color', scaleColour(d.approval));
+
+      $tooltip.append('p')
+        .attr('class','bio_popularity')
+        .text(` - `);
+
+      $tooltip.append('p')
+        .attr('class','bio_popularity')
+        .text(`disapproval: ${Math.round(d.disapproval*100)}%`)
+        .style('color', scaleColour(-d.disapproval));
+
+      $tooltip.append('p')
+        .attr('class','bio')
+        .text(`${d.bio}`);
+
     })
     .on('mouseout',function() {
       d3.select(this)
       .transition()
       .duration($transTime)
       .attr("opacity", .4);
-    });;
+      $tooltip.selectAll('p')
+        .remove()
+      $tooltip.selectAll('h3')
+        .remove()
+      return $tooltip.style("visibility", "hidden");
+    })
+    .on('mousemove', function() {
+      return $tooltip.style("top", (event.pageY-50)+"px").style("left",(event.pageX+25)+"px");
+  });
 
   $politicianEnter.append("text")
     .attr('class', 'approval_text');
@@ -271,74 +304,20 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .style('text-anchor','center')
     .style('vertical-align','center');
 
-  $gVis.selectAll('.politician').on("mouseover", function(d) {
-    $profiles.selectAll('h3').remove();
-    $profiles.selectAll('img').remove();
-    $profiles.selectAll('p').remove();
-
-    // $gVis.select('.approval_img').attr('opacity',1);
-
-    $profiles.append("h3")
-      .attr('class','politician_title')
-      .text(d.politician)
-      .attr('display','inline');
-      
-    $profiles.append("img")
-      .attr('class','profile_pic')
-      .attr("src",`assets/images/circle_profile/${d.politician
-          .toLowerCase()
-          .replace('ľ','l')
-          .replace('é','e')
-          .replace('í','i')
-          .replace('á','a')
-          .replace('ý','y')
-          .replace('ž','z')
-          .replace('ť','t')
-          .replace('č','c')
-          .replace('ó','o')
-          .replace('š','s')
-          .replace('-','')
-          .replace(/ /g,'')
-          .replace('/','')}.png`
-      )
-      .style('width',"80px")
-      .style('display','inline')
-      .style('margin','0px 10px 0px 0px')
-      .style('vertical-align','baseline');
-
-    $profiles.append("p")
-      .attr('class','birthplace')
-      .text(`* ${d.birthdate}, ${d.birthplace}`)
-      .style('font-size','11px');
-
-    $profiles.append("p")
-      .attr('class','approval')
-      .text(`Dôvera: ${Math.round(d.approval*100)}%`)
-      .style('font-size','11px')
-      .style("color", scaleColour(d.approval))
-      .style("display", "inline");
-
-    $profiles.append("p")
-      .attr('class','approval')
-      .text(` vs. `)
-      .style('font-size','11px')
-      .style("display", "inline");
-
-    $profiles.append("p")
-      .attr('class','disapproval')
-      .text(`Nedôvera: ${Math.round(d.disapproval*100)}%`)
-      .style('font-size','11px')
-      .style("color", scaleColour(-d.disapproval))
-      .style("display", "inline");
-    
-    $profiles.append("p")
-      .attr('class','bio')
-      .text(d.bio)
-      .style('font-size','10px');
-  });
-
-  $politician.on("mouseout", function() {
-
+  const $tooltip = d3.select("body").append("div.tooltip")
+    .st({
+      "position": "absolute",
+      "z-index": "10",
+      "visibility": "hidden",
+      "padding": "5px",
+      "background-color": "white",
+      "opacity": "1",
+      "border": "1px solid #ddd",
+      "border-radius": "5%",
+      "max-width": "300px"
+    })
+    .st({
+      "text-align": "center",
   });
 }
 
