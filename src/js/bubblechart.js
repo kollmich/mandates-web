@@ -127,7 +127,8 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .at({
       'class': 'heading',
       'transform': `translate(${0},${MARGIN.top/5})`
-  });
+  })
+  ;
 
   //SUBTITLE
   $svg.selectAll('text.subheading')
@@ -145,7 +146,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .remove();
 
   $svg.append('text')
-    .text(`data: Focus`)
+    .text(`data: Focus, 2020`)
     .at({
       'class': 'source',
       'transform': `translate(${0},${height+MARGIN.top+MARGIN.bottom - 5})`,
@@ -209,7 +210,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .attr("cx", function(d) { return scaleBand(d.politician); })
     .attr("r", img_size*0.57)
     .attr("fill", function(d) { return scaleColour(d.difference);})
-    .attr("opacity", 1.0);
+    .attr("opacity", 1);
 
   $politicianEnter.append("image")
     .attr('class','approval_img');
@@ -243,7 +244,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
       d3.select(this)
       .transition()
       .duration($transTime)
-      .attr("opacity", 1);
+      .attr("opacity", 0.9);
 
       $tooltip.style("visibility", "visible")
 
@@ -283,9 +284,9 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .on('mousemove', function() {
       // $tooltip.style("top", (event.pageY-d3.mouse(this)[0])+"px").style("left",(event.pageX-d3.mouse(this)[1]/2)+"px");
       if (d3.mouse(this)[0] < width/2) {
-        return $tooltip.style("top", (event.pageY-150)+"px").style("left",(event.pageX+75)+"px");
+        return $tooltip.style("top", (event.pageY-100)+"px").style("left",(event.pageX+50)+"px");
       } else {
-        return $tooltip.style("top", (event.pageY-250)+"px").style("left",(event.pageX-375)+"px");
+        return $tooltip.style("top", (event.pageY-220)+"px").style("left",(event.pageX-300)+"px");
       }
   });
 
@@ -320,7 +321,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
       "opacity": "0.95",
       "border": "1px solid #ddd",
       "border-radius": "5%",
-      "max-width": "300px"
+      "max-width": "250px"
     })
     .st({
       "text-align": "center",

@@ -203,8 +203,6 @@ function drawLineChart(data, scaleX, scaleY, scaleColour) {
     .attr('stroke-width', STROKE_W/2)
     .attr('stroke-opacity', 0.3)
     .attr('fill-opacity', 0)
-    .transition()
-    .duration(1500)
     .attr('fill-opacity',0.3)
     .attr('fill', function (d) {
       return scaleColour(d.party_shortname);
@@ -310,7 +308,7 @@ function drawLineChart(data, scaleX, scaleY, scaleColour) {
 
     $highlightMerge
       .selectAll('.highlightCircle')
-      .attr('r', $chart.node().offsetWidth/250)
+      .attr('r', $chart.node().offsetWidth/150)
       .attr('cy', function (d) {
         return scaleY(d.result);
       })
@@ -321,8 +319,8 @@ function drawLineChart(data, scaleX, scaleY, scaleColour) {
         return scaleColour(d.party_shortname);
       })
       .style('stroke', 'black')
-      .style('stroke-width',1.5)
-      .attr('fill-opacity', 1);
+      .style('stroke-width',2.5)
+      .attr('fill-opacity', 0.7);
 
     // ADD DATE ON MOUSEOVER
     const $dateZoom = $svg
