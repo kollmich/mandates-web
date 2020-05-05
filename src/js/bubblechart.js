@@ -115,8 +115,28 @@ function updateAxis(scaleY, scaleBand) {
   }
 }
 
+
+
 function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
   d3.selectAll(".baseline").remove();
+  // $gVis.append('line')
+  //   .attr("class","baseline")
+  //   .attr("x1",0)
+  //   .attr("x2",width)
+  //   .attr("y1",scaleY(0))
+  //   .attr("y2",scaleY(0))
+  //   .style("stroke-width","2.5px")
+  //   .style("stroke","grey");
+
+  $gAxis.selectAll('g.tick')
+    .filter(function(d){ return d==0;} )
+    //only ticks that returned true for the filter will be included
+    //in the rest of the method calls:
+    .select('line') //grab the tick line
+    .attr('class', 'quadrantBorder') //style with a custom class and CSS
+    .style('stroke-width', 2)
+    .style('stroke','black'); //or style directly with attributes or inline styles
+
 
   //TITLE
   $svg.selectAll('text.heading')
@@ -166,14 +186,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
   });
 
 
-  $gVis.append('line')
-    .attr("class","baseline")
-    .attr("x1",0)
-    .attr("x2",width)
-    .attr("y1",scaleY(0))
-    .attr("y2",scaleY(0))
-    .style("stroke-width","2.5px")
-    .style("stroke","grey");
+
 
   const $politician = $gVis
     .selectAll('.politician')
@@ -297,9 +310,9 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .selectAll('.approval_text')
     .attr("x", function(d) { 
       if (d.difference > 0){
-        return scaleY(0.7); 
+        return scaleY(1.7); 
       } else {
-        return scaleY(0.36); 
+        return scaleY(1.0); 
       };
     })
     .attr("y", function(d) { return scaleBand(d.politician)+img_size/10; })
