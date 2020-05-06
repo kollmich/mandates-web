@@ -24,6 +24,7 @@ const $gVis = $svg.select('.g-vis');
 const $gAxis = $svg.select('.g-axis');
 
 const $transTime = 300;
+const timeParse = d3.timeFormat("%e. %B %Y");
 
 const palette = [
   "#CC2A36", //DARK RED - SMER
@@ -58,7 +59,7 @@ function getScaleColour(data) {
 function getScaleY(data) {
   return d3
     .scaleLinear()
-    .domain([d3.min(data, d => d.difference),d3.max(data, d => d.difference)])
+    .domain([d3.min(data, d => d.difference)*1.5,d3.max(data, d => d.difference)*1.5])
     .nice()
     .range([height,0]);
 }
@@ -89,33 +90,34 @@ function updateAxis(scaleY, scaleBand) {
     .tickPadding(FONT_SIZE / 2)
     .tickSize(0);
 
-  //function to wrap long labels on axis  
-  function wrap(text, width) {
-    text.each(function () {
-      var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 1.1, // ems
-        y = text.attr("y"),
-        dy = parseFloat(text.attr("dy")),
-        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em")
-      while (word = words.pop()) {
-        line.push(word)
-        tspan.text(line.join(" "))
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop()
-          tspan.text(line.join(" "))
-          line = [word]
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * lineHeight + dy}em`).text(word)
-        }
-      }
-    })
-  }
+
 }
 
-
+//function to wrap long labels on axis  
+function wrap(text, width) {
+  text.each(function () {
+    var text = d3.select(this),
+      words = text.text().split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      lineHeight = 1.1, // ems
+      y = text.attr("y"),
+      x = text.attr("x"),
+      dy = parseFloat(text.attr("dy")),
+      tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em")
+    while (word = words.pop()) {
+      line.push(word)
+      tspan.text(line.join(" "))
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop()
+        tspan.text(line.join(" "))
+        line = [word]
+        tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", `${++lineNumber * lineHeight + dy}em`).text(word)
+      }
+    }
+  })
+}
 
 function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
   d3.selectAll(".baseline").remove();
@@ -155,7 +157,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .remove();
 
   $svg.append('text')
-    .text('Percentage difference in approval vs. disapproval ratings.')
+    .text('Percentage difference in trust vs. distrust ratings.')
     .at({
       'class': 'subheading',
       'transform': `translate(${0},${MARGIN.top/2.2})`
@@ -166,7 +168,7 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .remove();
 
   $svg.append('text')
-    .text(`data: Focus, 2020`)
+    .text(`data: Focus, published ${timeParse(d3.min(data, d => d.poll_date))}`)
     .at({
       'class': 'source',
       'transform': `translate(${0},${height+MARGIN.top+MARGIN.bottom - 5})`,
@@ -184,9 +186,6 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
       'transform': `translate(${width+MARGIN.left},${height+MARGIN.top+MARGIN.bottom - 5})`,
       'text-anchor':'end'
   });
-
-
-
 
   const $politician = $gVis
     .selectAll('.politician')
@@ -255,9 +254,9 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
     .on('mouseover',function(d) {
 
       d3.select(this)
-      .transition()
-      .duration($transTime)
-      .attr("opacity", 0.9);
+        .transition()
+        .duration($transTime)
+        .attr("opacity", 0.9);
 
       $tooltip.style("visibility", "visible")
 
@@ -266,16 +265,16 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
         
       $tooltip.append('p')
         .attr('class','bio_popularity')
-        .text(`approval: ${Math.round(d.approval*100)}%`)
+        .text(`trusted by ${Math.round(d.approval*100)}%`)
         .style('color', scaleColour(d.approval));
 
       $tooltip.append('p')
         .attr('class','bio_popularity')
-        .text(` - `);
+        .text(` vs. `);
 
       $tooltip.append('p')
         .attr('class','bio_popularity')
-        .text(`disapproval: ${Math.round(d.disapproval*100)}%`)
+        .text(`distrusted by ${Math.round(d.disapproval*100)}%`)
         .style('color', scaleColour(-d.disapproval));
 
       $tooltip.append('p')
@@ -308,21 +307,23 @@ function drawBubbleChart(data, scaleY, scaleColour, scaleBand) {
 
   $politicianMerge
     .selectAll('.approval_text')
-    .attr("x", function(d) { 
+    .attr("dy", 0)
+    .attr("y", function(d) { 
       if (d.difference > 0){
-        return scaleY(1.7); 
+        return scaleY(d.difference)-img_size*1.2; 
       } else {
-        return scaleY(1.0); 
+        return scaleY(d.difference)+img_size*0.8;
       };
     })
-    .attr("y", function(d) { return scaleBand(d.politician)+img_size/10; })
+    .attr("x", function(d) { return scaleBand(d.politician); })
     .text( function (d) { return d.politician; })
-    .attr("transform", function(d) {
-      return "rotate(-90)" 
-    })    
     .attr("opacity", 0.5)
-    .style('text-anchor','center')
+    .style('text-anchor','middle')
     .style('vertical-align','center');
+
+  $gVis.selectAll('.approval_text')
+    .call(wrap,10);
+    // .call(wrap,20);
 
   const $tooltip = d3.select("body").append("div.tooltip")
     .st({
